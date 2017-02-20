@@ -44,6 +44,7 @@ class TestView implements Serializable {
         http.request(Method.GET) { req ->
 
             steps.echo "22222222"
+            sleep(6000)
             response.success = { resp ->
                 steps.echo "33333333"
                 sleep(6000)
