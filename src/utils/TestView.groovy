@@ -9,5 +9,6 @@ class TestView implements Serializable {
     TestView(steps) {this.steps = steps}
     def mvn(repo) {
         steps.git url: "git@github.com:jenkinsci/${repo}"
+        steps.echo "lalalalalal"
     }
 }
