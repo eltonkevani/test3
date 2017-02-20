@@ -13,103 +13,40 @@ class TestView implements Serializable {
 */
 
 
-import groovyx.net.http.RESTClient
-import org.apache.http.HttpRequest
-import org.apache.http.HttpRequestInterceptor
-import org.apache.http.protocol.HttpContext
+@Grab(group = 'org.codehaus.groovy.modules.http-builder', module = 'http-builder', version = '0.7.1', transitive = false)
+@Grab(group = 'org.apache.httpcomponents', module = 'httpmime', version = '4.5.2', transitive = false)
+@Grab(group = 'org.apache.httpcomponents', module = 'httpclient', version = '4.5.2', transitive = true)
+@Grab(group = 'net.sf.json-lib', module = 'json-lib', version = '2.3', classifier = 'jdk15')
+@Grab(group = 'xml-resolver', module = 'xml-resolver', version = '1.2')
 
-import static groovyx.net.http.ContentType.JSON
+import groovyx.net.http.HTTPBuilder
+import groovyx.net.http.Method
+import org.apache.http.entity.ContentType
+import org.apache.http.entity.mime.MultipartEntityBuilder
+import org.apache.http.entity.mime.content.StringBody
 
-class TestView implements Serializable {
+def sendMultiPartFile() {
 
+    def http = new HTTPBuilder()
 
-    static def host = 'http://192.168.0.50:6516'
-    static def contextPath = ''
+    http.request( 'http://ajax.googleapis.com', GET, TEXT ) { req ->
+        uri.path = '/ajax/services/search/web'
+        uri.query = [ v:'1.0', q: 'Calvin and Hobbes' ]
+        headers.'User-Agent' = "Mozilla/5.0 Firefox/3.0.4"
+        headers.Accept = 'application/json'
 
+        response.success = { resp, reader ->
+            assert resp.statusLine.statusCode == 200
+            println "Got response: ${resp.statusLine}"
+            println "Content-Type: ${resp.headers.'Content-Type'}"
+            println reader.text
+        }
 
-    private RESTClient restClient
-    private projectName
-    private projectId
-    private enabled
-
-    private static def instances = [:]
-
-    public static TestView getInstance(String pn, enabled = true) {
-        if (pn in instances) {
-            return instances[pn]
-        } else {
-            println("TestView: creating new instance for project $pn")
-            instances.put(pn, new TestView(pn, enabled))
-            return instances[pn]
+        response.'404' = {
+            println 'Not found'
         }
     }
-
-    public TestView(pn, enabled = true) {
-        this.enabled = enabled
-        if (enabled) {
-            projectName = pn
-            restClient = createClient()
-            projectId = getOrCreateProject(projectName)
-        }
-    }
-
-    private RESTClient createClient() {
-
-        def username = 'admin'
-        def password = 'admin'
-
-
-        def client = new RESTClient(host)
-        client.client.addRequestInterceptor(new HttpRequestInterceptor() {
-            void process(HttpRequest httpRequest, HttpContext httpContext) {
-                httpRequest.addHeader('Authorization', 'Basic ' + (username + ":" + password).bytes.encodeBase64().toString())
-            }
-        })
-        return client
-    }
-
-
-    private getOrCreateProject(String projectName) {
-        def resp1;
-        def pid;
-        try {
-            resp1 = restClient.get(path: "$contextPath/api/internal/projects", contentType: JSON)
-            pid = resp1.data.find { it.title == projectName }
-        } catch (Exception e) {
-            println("TestView: Error trying to get project $projectName")
-        }
-
-        if (pid != null) {
-            return pid.name
-        }
-        // else continue...
-
-        def jsonbody = [
-                id: '',
-                type: 'xlt.Project',
-                title: projectName
-        ]
-
-        def resp;
-        try {
-            resp = restClient.post(path: "$contextPath/api/internal/projects",
-                    contentType: JSON,
-                    requestContentType: JSON,
-                    body: jsonbody)
-
-            return resp.data.name
-
-        } catch (Exception e) {
-           println("TestView: Error trying to create project $projectName")
-
-        }
-
-        return null
-    }
-
-
-
-
-
 }
+
+sendMultiPartFile()
 
