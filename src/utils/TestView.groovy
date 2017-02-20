@@ -26,6 +26,9 @@ import org.apache.http.entity.mime.MultipartEntityBuilder
 import org.apache.http.entity.mime.content.StringBody
 
 class TestView implements Serializable {
+    def steps
+    TestView(steps) {this.steps = steps}
+
     def sendMultiPartFile() {
         String user = 'admin'
         String password = 'admin'
@@ -36,23 +39,23 @@ class TestView implements Serializable {
                 'Authorization': "Basic $userPassBase64",
         )
         http.setContentType('application/json')
-        println "111111111"
+
+        steps.echo "111111111"
         http.request(Method.GET) { req ->
-            uri.path = '/api/v1/projects'
 
-            println "44444444444444"
+            steps.echo "22222222"
             response.success = { resp ->
+                steps.echo "33333333"
+                if (resp.statusLine.statusCode == 200) {
 
-                if (resp.statusLine.statusCode == 200 || resp.statusLine.statusCode == 304) {
-                    echo "OK"
+                    steps.echo "OKKK"
                 }else {
-                    echo "Error: ${resp.statusLine.statusCode} ${resp.statusLine.reasonPhrase}"
+                    println "Error: ${resp.statusLine.statusCode} ${resp.statusLine.reasonPhrase}"
+                    steps.echo "error"
                 }
             }
 
-            response.'404' = {
-                println 'Not found'
-            }
+
         }
     }
 
