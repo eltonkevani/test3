@@ -27,14 +27,18 @@ import org.apache.http.entity.mime.content.StringBody
 
 class TestView implements Serializable {
     def sendMultiPartFile() {
+        String user = 'admin'
+        String password = 'admin'
+        def userPassBase64 = "$user:$password".toString().bytes.encodeBase64()
+        def http = new HTTPBuilder("http://192.168.0.50:6516/api/v1/projects")
 
-        def http = new HTTPBuilder()
+        http.setHeaders(
+                'Authorization': "Basic $userPassBase64",
+        )
+        http.setContentType('application/json')
 
-        http.request('http://ajax.googleapis.com', GET, TEXT) { req ->
-            uri.path = '/ajax/services/search/web'
-            uri.query = [v: '1.0', q: 'Calvin and Hobbes']
-            headers.'User-Agent' = "Mozilla/5.0 Firefox/3.0.4"
-            headers.Accept = 'application/json'
+        http.request(Method.GET) { req ->
+            uri.path = '/api/v1/projects'
 
             response.success = { resp, reader ->
                 assert resp.statusLine.statusCode == 200
