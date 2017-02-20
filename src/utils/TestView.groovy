@@ -25,28 +25,29 @@ import org.apache.http.entity.ContentType
 import org.apache.http.entity.mime.MultipartEntityBuilder
 import org.apache.http.entity.mime.content.StringBody
 
-def sendMultiPartFile() {
+class TestView implements Serializable {
+    def sendMultiPartFile() {
 
-    def http = new HTTPBuilder()
+        def http = new HTTPBuilder()
 
-    http.request( 'http://ajax.googleapis.com', GET, TEXT ) { req ->
-        uri.path = '/ajax/services/search/web'
-        uri.query = [ v:'1.0', q: 'Calvin and Hobbes' ]
-        headers.'User-Agent' = "Mozilla/5.0 Firefox/3.0.4"
-        headers.Accept = 'application/json'
+        http.request('http://ajax.googleapis.com', GET, TEXT) { req ->
+            uri.path = '/ajax/services/search/web'
+            uri.query = [v: '1.0', q: 'Calvin and Hobbes']
+            headers.'User-Agent' = "Mozilla/5.0 Firefox/3.0.4"
+            headers.Accept = 'application/json'
 
-        response.success = { resp, reader ->
-            assert resp.statusLine.statusCode == 200
-            println "Got response: ${resp.statusLine}"
-            println "Content-Type: ${resp.headers.'Content-Type'}"
-            println reader.text
-        }
+            response.success = { resp, reader ->
+                assert resp.statusLine.statusCode == 200
+                println "Got response: ${resp.statusLine}"
+                println "Content-Type: ${resp.headers.'Content-Type'}"
+                println reader.text
+            }
 
-        response.'404' = {
-            println 'Not found'
+            response.'404' = {
+                println 'Not found'
+            }
         }
     }
+
+
 }
-
-sendMultiPartFile()
-
