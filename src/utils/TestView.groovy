@@ -46,9 +46,10 @@ class TestView implements Serializable {
             steps.echo "22222222"
             response.success = { resp ->
                 steps.echo "33333333"
+                sleep(6000)
                 if (resp.statusLine.statusCode == 200) {
-
-                    steps.echo "OKKK"
+                    sleep(6000)
+                    steps.echo "OK"
                 }else {
                     println "Error: ${resp.statusLine.statusCode} ${resp.statusLine.reasonPhrase}"
                     steps.echo "error"
