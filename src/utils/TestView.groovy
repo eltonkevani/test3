@@ -36,11 +36,11 @@ class TestView implements Serializable {
                 'Authorization': "Basic $userPassBase64",
         )
         http.setContentType('application/json')
-        prinlln "111111111"
+        println "111111111"
         http.request(Method.GET) { req ->
             uri.path = '/api/v1/projects'
 
-            prinlln "44444444444444"
+            println "44444444444444"
             response.success = { resp ->
 
                 if (resp.statusLine.statusCode == 200 || resp.statusLine.statusCode == 304) {
