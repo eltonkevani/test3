@@ -41,7 +41,7 @@ class TestView implements Serializable {
         http.setContentType('application/json')
 
         steps.echo "111111111"
-        http.request(Method.GET) { req ->
+        def response = http.request(Method.GET) { req ->
 
             steps.echo "22222222"
             sleep(6000)
