@@ -56,7 +56,7 @@ class TestView implements Serializable {
                     steps.echo "error"
                 }
             }
-
+            sleep(6000)
 
         }
     }
