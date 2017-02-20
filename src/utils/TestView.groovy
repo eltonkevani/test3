@@ -36,15 +36,18 @@ class TestView implements Serializable {
                 'Authorization': "Basic $userPassBase64",
         )
         http.setContentType('application/json')
-
+        prinlln "111111111"
         http.request(Method.GET) { req ->
             uri.path = '/api/v1/projects'
 
-            response.success = { resp, reader ->
-                assert resp.statusLine.statusCode == 200
-                println "Got response: ${resp.statusLine}"
-                println "Content-Type: ${resp.headers.'Content-Type'}"
-                println reader.text
+            prinlln "44444444444444"
+            response.success = { resp ->
+
+                if (resp.statusLine.statusCode == 200 || resp.statusLine.statusCode == 304) {
+                    echo "OK"
+                }else {
+                    echo "Error: ${resp.statusLine.statusCode} ${resp.statusLine.reasonPhrase}"
+                }
             }
 
             response.'404' = {
