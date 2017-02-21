@@ -14,7 +14,7 @@ class TestView implements Serializable {
         def result = new JsonSlurperClassic().parseText(getproject.content)
         if (result.title.contains(text)){
             steps.echo "Project with title ${text} exist"
-            def project = result.find { it -> it.title ==  text }
+            def project = result.find { it -> it.title ==  "${text}" }
             steps.echo "${project}"
             //return project.id
         }else{
