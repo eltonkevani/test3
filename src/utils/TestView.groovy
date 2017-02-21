@@ -40,18 +40,23 @@ class TestView implements Serializable {
         def res = [:]
 
         for (int i = 0; i < result.size(); i++) {
-            res.put(result[i].id, result[i].title)
+            res.put(result[i].title, result[i].id)
         }
         return res
     }
 
     def createPassiveTestSpecification(projectId, title, testToolName="xlt.JUnit") {
-
-        def testSpec = steps.httpRequest url: "${XLTV_HOST}/api/v1/projects/${projectId}/testspecifications", authentication: "${authentication}", contentType: "${contentType}", acceptType: "${contentType}", httpMode: 'POST', requestBody: "{\"title\":\"${title}\",\"testToolName\":\"${testToolName}\",\"qualificationType\":\"xlt.DefaultFunctionalTestsQualifier\"}"
-        def response = new JsonSlurperClassic().parseText(testSpec.content)
-        def testSpecId = response.id
-        steps.echo "TestSpect with title ${title} was created and ID is ${testSpecId}"
-        return testSpecId
+        def res = getSpecificationNames(projectId)
+        if (title in res){
+            steps.echo "TestSpect with title ${title} exist and ID is ${res.title}"
+            return res.title
+        }else {
+            def testSpec = steps.httpRequest url: "${XLTV_HOST}/api/v1/projects/${projectId}/testspecifications", authentication: "${authentication}", contentType: "${contentType}", acceptType: "${contentType}", httpMode: 'POST', requestBody: "{\"title\":\"${title}\",\"testToolName\":\"${testToolName}\",\"qualificationType\":\"xlt.DefaultFunctionalTestsQualifier\"}"
+            def response = new JsonSlurperClassic().parseText(testSpec.content)
+            def testSpecId = response.id
+            steps.echo "TestSpect with title ${title} was created and ID is ${testSpecId}"
+            return testSpecId
+        }
     }
 }
 
