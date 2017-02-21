@@ -48,6 +48,7 @@ class TestView implements Serializable {
     def createPassiveTestSpecification(projectId, title, testToolName="xlt.JUnit") {
         def res = getSpecificationNames(projectId)
         if (title in res){
+            steps.echo "${res}"
             steps.echo "TestSpect with title ${title} exist and ID is ${res.title}"
             return res.title
         }else {
