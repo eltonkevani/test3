@@ -20,7 +20,7 @@ class TestView implements Serializable {
             def projectId = response.id
             steps.echo "Project with title ${text} was created and ID is ${projectId}"
         }
-        steps.echo "${result[1].title}"
+        //steps.echo "${result[1].title}"
     }
 
 
