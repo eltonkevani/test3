@@ -14,12 +14,13 @@ class TestView implements Serializable {
         def result = new JsonSlurperClassic().parseText(getproject.content)
         if (result.title.contains(text)){
             steps.echo "Project with title ${text} exist"
-            for (i = 0; i < result.size(); i++){
+            for (i = 0; i < result.size(); i++) {
 
-                if (result[i].title=="${text}"){
+                if (result[i].title == "${text}") {
                     return result[i].id
                 }
-            //return project.id
+                //return project.id
+            }
         }else{
             def setproject = steps.httpRequest url: "${XLTV_HOST}/api/v1/projects", authentication: "${authentication}", contentType: "${contentType}", acceptType: "${contentType}", httpMode: 'POST', requestBody: "{\"title\":\"${text}\"}"
             def response = new JsonSlurperClassic().parseText(setproject.content)
