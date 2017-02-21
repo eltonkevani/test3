@@ -15,7 +15,7 @@ class TestView implements Serializable {
         def Projects = steps.httpRequest url: "${XLTV_HOST}/api/v1/projects", authentication: "${authentication}", contentType: "${contentType}", acceptType: "${contentType}", httpMode: 'GET'
         def result = new JsonSlurperClassic().parseText(Projects.content)
         if (result.title.contains(pn)) {
-            steps.echo "Project with title ${pn} exist"
+            steps.echo "Project with title: ${pn} exist"
             for (int i = 0; i < result.size(); i++) {
 
                 if (result[i].title == "${pn}") {
@@ -26,7 +26,7 @@ class TestView implements Serializable {
             def Project = steps.httpRequest url: "${XLTV_HOST}/api/v1/projects", authentication: "${authentication}", contentType: "${contentType}", acceptType: "${contentType}", httpMode: 'POST', requestBody: "{\"title\":\"${pn}\"}"
             def response = new JsonSlurperClassic().parseText(Project.content)
             def projectId = response.id
-            steps.echo "Project with title ${pn} was created and ID is ${projectId}"
+            steps.echo "Project with title: ${pn} was created and ID is: ${projectId}"
             return projectId
 
         }
@@ -48,14 +48,13 @@ class TestView implements Serializable {
     def createPassiveTestSpecification(projectId, title, testToolName="xlt.JUnit") {
         def res = getSpecificationNames(projectId)
         if (title in res){
-            steps.echo "${res[title]}"
-            steps.echo "TestSpect with title ${title} exist and ID is ${res.title}"
-            return res.title
+            steps.echo "TestSpect with title: ${title} exist and ID is: ${res[title]}"
+            return res[title]
         }else {
             def testSpec = steps.httpRequest url: "${XLTV_HOST}/api/v1/projects/${projectId}/testspecifications", authentication: "${authentication}", contentType: "${contentType}", acceptType: "${contentType}", httpMode: 'POST', requestBody: "{\"title\":\"${title}\",\"testToolName\":\"${testToolName}\",\"qualificationType\":\"xlt.DefaultFunctionalTestsQualifier\"}"
             def response = new JsonSlurperClassic().parseText(testSpec.content)
             def testSpecId = response.id
-            steps.echo "TestSpect with title ${title} was created and ID is ${testSpecId}"
+            steps.echo "TestSpect with title: ${title} was created and ID is: ${testSpecId}"
             return testSpecId
         }
     }
