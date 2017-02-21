@@ -11,7 +11,7 @@ class TestView implements Serializable {
     TestView(steps) {this.steps = steps}
     def getOrCreateProject(text) {
         def getproject = steps.httpRequest url: "${XLTV_HOST}/api/v1/projects", authentication: "${authentication}", contentType: "${contentType}", acceptType: "${contentType}", httpMode: 'GET'
-        def result = new JsonSlurperClassic().parseText(project.content)
+        def result = new JsonSlurperClassic().parseText(getproject.content)
         if (result.title.contains(text)){
             steps.echo "Project with title ${text} exist"
             def project = result.find { it.title == text }
@@ -24,7 +24,7 @@ class TestView implements Serializable {
             return projectId
 
         }
-        
+
     }
 
    def createProject(text){
