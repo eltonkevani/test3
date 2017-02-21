@@ -35,7 +35,7 @@ class TestView implements Serializable {
    def getSpecificationNames(projectId){
 
        def specNames = steps.httpRequest url: "${XLTV_HOST}/api/v1/projects/${projectId}/testspecifications", authentication: "${authentication}", contentType: "${contentType}", acceptType: "${contentType}", httpMode: 'GET'
-       def result = new JsonSlurperClassic().parseText(getSpecs.content)
+       def result = new JsonSlurperClassic().parseText(specNames.content)
        def res = [:]
 
        for (int i = 0; i < result.size(); i++) {
