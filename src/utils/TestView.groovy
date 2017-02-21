@@ -22,9 +22,10 @@ class TestView implements Serializable {
 
    def createProject(text){
        def setproject = steps.httpRequest url: "${XLTV_HOST}/api/v1/projects", authentication: "${authentication}", contentType: "${contentType}", acceptType: "${contentType}", httpMode: 'POST', requestBody: "{\"title\":\"${text}\"}"
-       def response = new JsonSlurper().parseText(setproject.content)
-       def projectId = response.id
-       steps.echo "Project with title ${text} was created and ID is ${projectId}"
+       //def response = new JsonSlurper().parseText(setproject.content)
+       //def projectId = response.id
+       //steps.echo "Project with title ${text} was created and ID is ${projectId}"
+       steps.echo "${setproject.status}"
    }
 }
 
