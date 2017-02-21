@@ -9,9 +9,10 @@ class TestView implements Serializable {
     def contentType = "APPLICATION_JSON"
 
     TestView(steps) {this.steps = steps}
+
     def getOrCreateProject(text) {
-        def getproject = steps.httpRequest url: "${XLTV_HOST}/api/v1/projects", authentication: "${authentication}", contentType: "${contentType}", acceptType: "${contentType}", httpMode: 'GET'
-        def result = new JsonSlurperClassic().parseText(getproject.content)
+        def Projects = steps.httpRequest url: "${XLTV_HOST}/api/v1/projects", authentication: "${authentication}", contentType: "${contentType}", acceptType: "${contentType}", httpMode: 'GET'
+        def result = new JsonSlurperClassic().parseText(Projects.content)
         if (result.title.contains(text)){
             steps.echo "Project with title ${text} exist"
             for (int i = 0; i < result.size(); i++) {
@@ -19,11 +20,10 @@ class TestView implements Serializable {
                 if (result[i].title == "${text}") {
                     return result[i].id
                 }
-                //return project.id
             }
         }else{
-            def setproject = steps.httpRequest url: "${XLTV_HOST}/api/v1/projects", authentication: "${authentication}", contentType: "${contentType}", acceptType: "${contentType}", httpMode: 'POST', requestBody: "{\"title\":\"${text}\"}"
-            def response = new JsonSlurperClassic().parseText(setproject.content)
+            def Project = steps.httpRequest url: "${XLTV_HOST}/api/v1/projects", authentication: "${authentication}", contentType: "${contentType}", acceptType: "${contentType}", httpMode: 'POST', requestBody: "{\"title\":\"${text}\"}"
+            def response = new JsonSlurperClassic().parseText(Project.content)
             def projectId = response.id
             steps.echo "Project with title ${text} was created and ID is ${projectId}"
             return projectId
@@ -32,8 +32,16 @@ class TestView implements Serializable {
 
     }
 
-   def createProject(text){
+   def getSpecificationNames(projectId){
 
+       def specNames = steps.httpRequest url: "${XLTV_HOST}/api/v1/projects/${projectId}/testspecifications", authentication: "${authentication}", contentType: "${contentType}", acceptType: "${contentType}", httpMode: 'GET'
+       def result = new JsonSlurperClassic().parseText(getSpecs.content)
+       def res = [:]
+
+       for (int i = 0; i < result.size(); i++) {
+           res.put(result[i].id,result[i].title)
+       }
+       return res
    }
 }
 
