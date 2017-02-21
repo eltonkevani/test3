@@ -17,7 +17,7 @@ class TestView implements Serializable {
             //def project = result.find { it.title == text }.id
             //steps.echo "${project}"
             def pro = result.findAll()
-            steps.echo "${pro}"
+            steps.echo "${result.find { it.title == text }.id}"
             //return project.id
         }else{
             def setproject = steps.httpRequest url: "${XLTV_HOST}/api/v1/projects", authentication: "${authentication}", contentType: "${contentType}", acceptType: "${contentType}", httpMode: 'POST', requestBody: "{\"title\":\"${text}\"}"
