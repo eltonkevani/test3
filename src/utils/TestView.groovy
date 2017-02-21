@@ -23,6 +23,7 @@ class TestView implements Serializable {
                 }
             }
         } else {
+            steps.echo "Project with title: ${pn} does not exist and will be created"
             def Project = steps.httpRequest url: "${XLTV_HOST}/api/v1/projects", authentication: "${authentication}", contentType: "${contentType}", acceptType: "${contentType}", httpMode: 'POST', requestBody: "{\"title\":\"${pn}\"}"
             def response = new JsonSlurperClassic().parseText(Project.content)
             def projectId = response.id
@@ -51,6 +52,7 @@ class TestView implements Serializable {
             steps.echo "TestSpect with title: ${title} exist and ID is: ${res[title]}"
             return res[title]
         }else {
+            steps.echo "TestSpect with title: ${title} does not exist and will be created"
             def testSpec = steps.httpRequest url: "${XLTV_HOST}/api/v1/projects/${projectId}/testspecifications", authentication: "${authentication}", contentType: "${contentType}", acceptType: "${contentType}", httpMode: 'POST', requestBody: "{\"title\":\"${title}\",\"testToolName\":\"${testToolName}\",\"qualificationType\":\"xlt.DefaultFunctionalTestsQualifier\"}"
             def response = new JsonSlurperClassic().parseText(testSpec.content)
             def testSpecId = response.id
