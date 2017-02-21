@@ -1,5 +1,5 @@
 package utils
-import groovy.json.JsonSlurper
+import groovy.json.JsonSlurperClassic
 
 
 class TestView implements Serializable {
@@ -11,7 +11,7 @@ class TestView implements Serializable {
     TestView(steps) {this.steps = steps}
     def getOrCreateProject(text) {
         def project = steps.httpRequest url: "${XLTV_HOST}/api/v1/projects", authentication: "${authentication}", contentType: "${contentType}", acceptType: "${contentType}", httpMode: 'GET'
-        def result = new JsonSlurper().parseText(project.content)
+        def result = new JsonSlurperClassic().parseText(project.content)
         if (result.title.contains(text)){
             steps.echo "Project with title ${text} exist"
         }else{
