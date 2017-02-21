@@ -15,7 +15,7 @@ class TestView implements Serializable {
         if (result.title.contains(text)){
             steps.echo "Project with title ${text} exist"
             //def project = result.find { it.title == text }.id
-            steps.echo "${project}"
+            //steps.echo "${project}"
             def pro = result.findAll()
             steps.echo "${pro}"
             //return project.id
