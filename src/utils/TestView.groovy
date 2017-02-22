@@ -5,11 +5,15 @@ import groovy.json.JsonSlurperClassic
 
 class TestView implements Serializable {
     def steps
-    def XLTV_HOST = "http://192.168.0.50:6516"
-    def authentication = "xltv"
+    def XLTV_HOST
+    def authentication
     def contentType = "APPLICATION_JSON"
 
-    TestView(steps) { this.steps = steps }
+    TestView(steps, XLTV_HOST, authentication) {
+        this.steps = steps
+        this.XLTV_HOST = XLTV_HOST
+        this.authentication = authentication
+         }
 
     def getOrCreateProject(pn) {
         def Projects = steps.httpRequest url: "${XLTV_HOST}/api/v1/projects", authentication: "${authentication}", contentType: "${contentType}", acceptType: "${contentType}", httpMode: 'GET'
@@ -61,8 +65,3 @@ class TestView implements Serializable {
         }
     }
 }
-
-
-
-
-
