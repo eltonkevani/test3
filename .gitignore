@@ -1,0 +1,17 @@
+jenkins-cli.jar
+.idea
+*.swp
+*.swo
+.vagrant
+.gradle
+/lib/
+*.iml
+*.ipr
+/build/
+.classpath
+.project
+.settings/
+/vagrant-provisioning/files/xltv/xl-testview-server-*.zip
+/vagrant-provisioning/files/xltv/*.lic
+/vagrant-provisioning/files/current-branch.txt
+/target
