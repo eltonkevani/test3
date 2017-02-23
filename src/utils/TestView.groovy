@@ -43,10 +43,13 @@ class TestView implements Serializable {
         def specNames = steps.httpRequest url: "${XLTV_HOST}/api/v1/projects/${projectId}/testspecifications", authentication: "${authentication}", contentType: "${contentType}", acceptType: "${contentType}", httpMode: 'GET'
         def result = new JsonSlurperClassic().parseText(specNames.content)
         def res = [:]
-
+        steps.echo "startaaaaaaaaaaaaaaaaaaa the loooop"
         for (int i = 0; i < result.size(); i++) {
+            
             res.put(result[i].title, result[i].id)
+            steps.echo "${result[i].title}"
         }
+        steps.echo "enddddddddddddddddddd the loooop"
         return res
     }
 
