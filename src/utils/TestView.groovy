@@ -22,9 +22,9 @@ class TestView implements Serializable {
         if(pn.toString() in res){
              steps.echo "trueeeeeeeeeeeeeeeeeeeeeeeeeeee"         
          }else{ steps.echo "falseeeeeeeeeeeeeeeeeeeeeeeeeee"}
-        def proj = result.title.contains(pn)
+        def proj = result.title.contains(pn.toString())
         steps.echo "MALAKAAAAAAAAAAAAAAAAAAAAAAAAAAAA: ${proj}"
-        if (result.title.contains(pn)) {
+        if (result.title.contains(pn.toString())) {
             steps.echo "Project with title: ${pn} exist"
             for (int i = 0; i < result.size(); i++) {
 
@@ -58,9 +58,9 @@ class TestView implements Serializable {
 
     def createPassiveTestSpecification(projectId, title, testToolName="xlt.JUnit") {
         def res = getSpecificationNames(projectId)
-        if (title in res){
-            steps.echo "TestSpect with title: ${title} exist and ID is: ${res[title]}"
-            return res[title]
+        if (title.toString() in res){
+            steps.echo "TestSpect with title: ${title} exist and ID is: ${res[title.toString()]}"
+            return res[title.toString()]
         }else {
             steps.echo "TestSpect with title: ${title} does not exist and will be created"
             def testSpec = steps.httpRequest url: "${XLTV_HOST}/api/v1/projects/${projectId}/testspecifications", authentication: "${authentication}", contentType: "${contentType}", acceptType: "${contentType}", httpMode: 'POST', requestBody: "{\"title\":\"${title}\",\"testToolName\":\"${testToolName}\",\"qualificationType\":\"xlt.DefaultFunctionalTestsQualifier\"}"
