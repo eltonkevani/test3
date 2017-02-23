@@ -5,16 +5,20 @@ import groovy.json.JsonSlurperClassic
 
 class TestView implements Serializable {
     def steps
-    def XLTV_HOST = "http://192.168.0.50:6516"
-    def authentication = "xltv"
+    def XLTV_HOST
+    def authentication
     def contentType = "APPLICATION_JSON"
 
-    TestView(steps) { this.steps = steps }
+    TestView(steps, XLTV_HOST, authentication) {
+        this.steps = steps
+        this.XLTV_HOST = XLTV_HOST
+        this.authentication = authentication
+         }
 
     def getOrCreateProject(pn) {
         def Projects = steps.httpRequest url: "${XLTV_HOST}/api/v1/projects", authentication: "${authentication}", contentType: "${contentType}", acceptType: "${contentType}", httpMode: 'GET'
         def result = new JsonSlurperClassic().parseText(Projects.content)
-        if (result.title.contains(pn)) {
+        if (result.title.contains(pn.toString())) {
             steps.echo "Project with title: ${pn} exist"
             for (int i = 0; i < result.size(); i++) {
 
@@ -39,7 +43,7 @@ class TestView implements Serializable {
         def specNames = steps.httpRequest url: "${XLTV_HOST}/api/v1/projects/${projectId}/testspecifications", authentication: "${authentication}", contentType: "${contentType}", acceptType: "${contentType}", httpMode: 'GET'
         def result = new JsonSlurperClassic().parseText(specNames.content)
         def res = [:]
-
+        
         for (int i = 0; i < result.size(); i++) {
             res.put(result[i].title, result[i].id)
         }
@@ -48,9 +52,9 @@ class TestView implements Serializable {
 
     def createPassiveTestSpecification(projectId, title, testToolName="xlt.JUnit") {
         def res = getSpecificationNames(projectId)
-        if (title in res){
-            steps.echo "TestSpect with title: ${title} exist and ID is: ${res[title]}"
-            return res[title]
+        if (title.toString() in res){
+            steps.echo "TestSpect with title: ${title} exist and ID is: ${res[title.toString()]}"
+            return res[title.toString()]
         }else {
             steps.echo "TestSpect with title: ${title} does not exist and will be created"
             def testSpec = steps.httpRequest url: "${XLTV_HOST}/api/v1/projects/${projectId}/testspecifications", authentication: "${authentication}", contentType: "${contentType}", acceptType: "${contentType}", httpMode: 'POST', requestBody: "{\"title\":\"${title}\",\"testToolName\":\"${testToolName}\",\"qualificationType\":\"xlt.DefaultFunctionalTestsQualifier\"}"
@@ -61,8 +65,3 @@ class TestView implements Serializable {
         }
     }
 }
-
-
-
-
-
