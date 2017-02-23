@@ -21,7 +21,7 @@ class TestView implements Serializable {
         def res = ["test":"123","test2":"123","TEST master":"123"]
         if(pn in res){
              steps.echo "trueeeeeeeeeeeeeeeeeeeeeeeeeeee"         
-         }else{ stepsecho "falseeeeeeeeeeeeeeeeeeeeeeeeeee"}
+         }else{ steps.echo "falseeeeeeeeeeeeeeeeeeeeeeeeeee"}
         def proj = result.title.contains(pn)
         steps.echo "MALAKAAAAAAAAAAAAAAAAAAAAAAAAAAAA: ${proj}"
         if (result.title.contains(pn)) {
