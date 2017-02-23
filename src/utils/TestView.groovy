@@ -18,12 +18,13 @@ class TestView implements Serializable {
     def getOrCreateProject(pn) {
         def Projects = steps.httpRequest url: "${XLTV_HOST}/api/v1/projects", authentication: "${authentication}", contentType: "${contentType}", acceptType: "${contentType}", httpMode: 'GET'
         def result = new JsonSlurperClassic().parseText(Projects.content)
-        def proj = pn
-        if (result.title.contains(proj)) {
-            steps.echo "Project with title: ${proj} exist"
+        def proj = result.title.contains(pn)
+        steps.echo "MALAKAAAAAAAAAAAAAAAAAAAAAAAAAAAA: ${proj}"
+        if (result.title.contains(pn)) {
+            steps.echo "Project with title: ${pn} exist"
             for (int i = 0; i < result.size(); i++) {
 
-                if (result[i].title == "${proj}") {
+                if (result[i].title == "${pn}") {
                     return result[i].id
                 }
             }
@@ -44,21 +45,15 @@ class TestView implements Serializable {
         def specNames = steps.httpRequest url: "${XLTV_HOST}/api/v1/projects/${projectId}/testspecifications", authentication: "${authentication}", contentType: "${contentType}", acceptType: "${contentType}", httpMode: 'GET'
         def result = new JsonSlurperClassic().parseText(specNames.content)
         def res = [:]
-        steps.echo "startaaaaaaaaaaaaaaaaaaa the loooop"
+        
         for (int i = 0; i < result.size(); i++) {
-            
             res.put(result[i].title, result[i].id)
-            steps.echo "${result[i].title}"
         }
-        steps.echo "enddddddddddddddddddd the loooop"
         return res
     }
 
     def createPassiveTestSpecification(projectId, title, testToolName="xlt.JUnit") {
         def res = getSpecificationNames(projectId)
-        steps.echo "passiveeeeeeeeeeeeeeeeeeeeeeeeee"
-        steps.echo "resssssssssssssss ${res}"
-        steps.echo "titleeeeee ${title}"
         if (title in res){
             steps.echo "TestSpect with title: ${title} exist and ID is: ${res[title]}"
             return res[title]
