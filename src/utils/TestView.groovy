@@ -19,7 +19,7 @@ class TestView implements Serializable {
         def Projects = steps.httpRequest url: "${XLTV_HOST}/api/v1/projects", authentication: "${authentication}", contentType: "${contentType}", acceptType: "${contentType}", httpMode: 'GET'
         def result = new JsonSlurperClassic().parseText(Projects.content)
         def res = ["test":"123","test2":"123","TEST master":"123"]
-        if(pn in res){
+        if(pn.toString() in res){
              steps.echo "trueeeeeeeeeeeeeeeeeeeeeeeeeeee"         
          }else{ steps.echo "falseeeeeeeeeeeeeeeeeeeeeeeeeee"}
         def proj = result.title.contains(pn)
